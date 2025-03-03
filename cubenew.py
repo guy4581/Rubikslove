@@ -9,34 +9,19 @@ RESET = colorama.Fore.RESET
 RED = colorama.Fore.RED
 MAGENTA=colorama.Fore.MAGENTA
 colorama.init()
-print(rf"{RED}          ______    __     __    _________    _________                                   ___ ___ ___                 ")
-print(rf"{GREEN}         |  ____|  |  |   |  |  |  _____  |  | ________|                                 |   |   |   |            ")
-print(rf"{GREEN}         | |       |  |   |  |  | |_____| |  | |____                                     |___|___|___|               ")
-print(rf"{GREEN}         | |       |  |   |  |  |  _____  |  |  ____|                                    |   |   |   |            ")
-print(rf"{GREEN}         | |____   |  |___|  |  | |_____| |  | |_______                                  |_N_|_I_|_C_|            ")
-print(rf"{GREEN}         |______|  |_________|  |_________|  |_________|                                 |   |   |   |            ")
-print(rf"{RED}                                                                                         |___|___|___|                     ")    
-print(rf"{RED}                            _______    _________    __      ___      ___   ________    ________         ",end='\n')
-print(rf"{GREEN}                           |  _____|  |   ___   |  |  |     \  \    /  /  |  ______|  |  _____ |    ")
-print(rf"{GREEN}                           | |_____   |  |   |  |  |  |      \  \  /  /   | |____     |  ______|    ")
-print(rf"{GREEN}                           |_____  |  |  |   |  |  |  |       \  \/  /    |  ____|    |   \  \        ")
-print(rf"{GREEN}                            _____| |  |  |___|  |  |  |____    \    /     | |______   |  | \  \       ")
-print(rf"{RED}                           |_______|  |_________|  |_______|    \__/      |________|  |__|  \__\      ")
 
 time.sleep(2)
-print("")
-print("")
+
 print(f"{MAGENTA}Please refer preview window for which side you have scanned and which color should be in centre on each side. ")
 
-state=  {
-            'up':['white','white','white','white','white','white','white','white','white',],
-            'right':['white','white','white','white','white','white','white','white','white',],
-            'front':['white','white','white','white','white','white','white','white','white',],
-            'down':['white','white','white','white','white','white','white','white','white',],
-            'left':['white','white','white','white','white','white','white','white','white',],
-            'back':['white','white','white','white','white','white','white','white','white',]
-        }
-
+state = {
+    'up':    ['white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white'],
+    'right': ['red', 'red', 'red', 'red', 'red', 'red', 'red', 'red', 'red'],
+    'front': ['green', 'green', 'green', 'green', 'green', 'green', 'green', 'green', 'green'],
+    'down':  ['yellow', 'yellow', 'yellow', 'yellow', 'yellow', 'yellow', 'yellow', 'yellow', 'yellow'],
+    'left':  ['orange', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange'],
+    'back':  ['blue', 'blue', 'blue', 'blue', 'blue', 'blue', 'blue', 'blue', 'blue']
+}
 sign_conv={
             'green'  : 'F',
             'white'  : 'U',
@@ -320,24 +305,44 @@ if __name__=='__main__':
         k = cv2.waitKey(5) & 0xFF
         if k == 27:
             break
-        elif k ==ord('u'):
-            state['up']=current_state
-            check_state.append('u')
-        elif k ==ord('r'):
-            check_state.append('r')
-            state['right']=current_state
-        elif k ==ord('l'):
-            check_state.append('l')
-            state['left']=current_state
-        elif k ==ord('d'):
-            check_state.append('d')
-            state['down']=current_state       
-        elif k ==ord('f'):
-            check_state.append('f')
-            state['front']=current_state       
-        elif k ==ord('b'):
-            check_state.append('b')
-            state['back']=current_state       
+        
+        elif k == ord('u'):
+    # Update edges only, leave the center intact
+                state['up'] = [current_state[0], current_state[1], current_state[2],
+                   current_state[3], state['up'][4], current_state[5],
+                   current_state[6], current_state[7], current_state[8]]
+                check_state.append('u')
+        elif k == ord('r'):
+    # Update edges only, leave the center intact
+                state['right'] = [current_state[0], current_state[1], current_state[2],
+                      current_state[3], state['right'][4], current_state[5],
+                      current_state[6], current_state[7], current_state[8]]
+                check_state.append('r')
+        elif k == ord('l'):
+    # Update edges only, leave the center intact
+                state['left'] = [current_state[0], current_state[1], current_state[2],
+                     current_state[3], state['left'][4], current_state[5],
+                     current_state[6], current_state[7], current_state[8]]
+                check_state.append('l')
+        elif k == ord('d'):
+    # Update edges only, leave the center intact
+                state['down'] = [current_state[0], current_state[1], current_state[2],
+                     current_state[3], state['down'][4], current_state[5],
+                     current_state[6], current_state[7], current_state[8]]
+                check_state.append('d')
+        elif k == ord('f'):
+    # Update edges only, leave the center intact
+                state['front'] = [current_state[0], current_state[1], current_state[2],
+                      current_state[3], state['front'][4], current_state[5],
+                      current_state[6], current_state[7], current_state[8]]
+                check_state.append('f')
+        elif k == ord('b'):
+    # Update edges only, leave the center intact
+                state['back'] = [current_state[0], current_state[1], current_state[2],
+                     current_state[3], state['back'][4], current_state[5],
+                     current_state[6], current_state[7], current_state[8]]
+                check_state.append('b')
+
         elif k == ord('\r'):
             # process(["R","R'"])
             if len(set(check_state))==6:    
