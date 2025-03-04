@@ -8,6 +8,7 @@ GRAY = colorama.Fore.LIGHTBLACK_EX
 RESET = colorama.Fore.RESET
 RED = colorama.Fore.RED
 MAGENTA=colorama.Fore.MAGENTA
+ESP32_URL = "http://192.168.229.144:81/stream"
 colorama.init()
 
 time.sleep(2)
@@ -103,9 +104,11 @@ textPoints=  {
 check_state=[]
 solution=[]
 solved=False
-
-cap=cv2.VideoCapture(0)
+3
+cap=cv2.VideoCapture(ESP32_URL, cv2.CAP_FFMPEG)
 cv2.namedWindow('frame')
+cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)  # Reduce buffer size for real-time streaming
+cap.set(cv2.CAP_PROP_FPS, 15)  # Reduce frame rate to decrease lag
 
 def rotate(side):
     main=state[side]
@@ -162,6 +165,10 @@ def solve(state):
         for j in state[i]:
             raw+=sign_conv[j]
     print("answer:",Cube.solve(raw))
+    message = Cube.solve(raw)
+# Write the string to a file
+    with open('solve.txt', 'w') as f:
+        f.write(message)
     return Cube.solve(raw)
 
 
@@ -173,19 +180,19 @@ def color_detect(h, s, v, side=None):
         return 'white'
     
     # Red detection (hue wraps around near 0 and 180)
-    if h > 170 and s > 50 and v > 50:
+    if ( h < 5 or h > 170 )and s > 50 and v > 50:
         return 'red'
     
     # Orange detection: Narrower range to avoid misclassification
-    if 0 <= h < 24 and s > 50 and v > 50:
+    if 5 <= h < 24 and s > 50 and v > 50:
         return 'orange'
     
     # Yellow detection: Moved slightly up to avoid overlap with orange
-    if 25 <= h < 40 and s > 50 and v > 50:
+    if 25 <= h < 45 and s > 50 and v > 50:
         return 'yellow'
     
     # Green detection: Ensures it doesn’t mix with yellow
-    if 40 <= h < 85 and s > 30:
+    if 45 <= h < 85 and s > 30:
         return 'green'
     
     # Blue detection
